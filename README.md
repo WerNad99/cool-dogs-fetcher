@@ -60,3 +60,6 @@ chmod +x /usr/local/bin/docker-compose
 docker compose up -d
 
 ```
+<img width="1108" height="807" alt="image" src="https://github.com/user-attachments/assets/3351df31-cd5d-48cd-8061-da5271c3bc06" />
+<img width="1097" height="618" alt="image" src="https://github.com/user-attachments/assets/3c5c3090-c8e4-4316-b912-5eb40fc874fc" />
+
