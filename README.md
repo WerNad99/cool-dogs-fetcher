@@ -17,7 +17,12 @@ Architecture
 | `/image/<name>` | GET | Retrieve stored image by name |
 | `/image/last` | GET | Retrieve the latest stored image |
 
-⸻
+## Download app repo
+
+```
+git clone https://github.com/andreworanskyi/cool-dogs-fetcher.git
+cd cool-dogs-fetcher
+```
 
 ## Run locally
 
