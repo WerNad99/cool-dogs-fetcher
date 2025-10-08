@@ -27,10 +27,13 @@ cd cool-dogs-fetcher
 ## Run locally
 
 ```
+apt-get install git
+git clone https://github.com/WerNad99/cool-dogs-fetcher.git
+
 pip install -r requirements.txt
 python app1.py
 ``` 
-- Open http://localhost:80/ (standart HTTP)
+- Open http://localhost:80/ (standart HTTP - you will only be able to use it as a root user/won't work with sudo; in case this happens, feel free to adapt the port accordingly)
 
 ## Run in Docker
 ``` 
