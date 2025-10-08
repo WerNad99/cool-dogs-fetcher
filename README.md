@@ -1,4 +1,4 @@
-#Cool Dogs Fetcher
+# Cool Dogs Fetcher
 
 A lightweight Flask app that fetches dog images, stores them in a temporary SQLite database, and serves them via a small web UI.
 
@@ -21,12 +21,12 @@ Run locally
 
 pip install -r requirements.txt
 python3 app1.py
-# Open http://localhost:8000/
+- Open http://localhost:8000/
 
 🐳 Run in Docker
 
 docker compose build
 docker compose up
-# Open http://localhost:8000/
+- Open http://localhost:8000/
 
 For the purpose of this app, no persistent volume: the SQLite database is rebuilt on every new fetch or container restart.
