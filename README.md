@@ -8,7 +8,7 @@ Architecture
 - **Frontend** – Minimal HTML + JS served at `/`
 
 
-🔗 Endpoints
+Endpoints
 
 | Endpoint | Method | Description |
 |-----------|--------|-------------|
@@ -30,13 +30,30 @@ cd cool-dogs-fetcher
 pip install -r requirements.txt
 python app1.py
 ``` 
-- Open http://localhost:8000/
+- Open http://localhost:80/ (standart HTTP)
 
 ## Run in Docker
 ``` 
 docker compose build
 docker compose up
 ``` 
-- Open http://localhost:8000/
+- Open http://localhost:80/
 
 For the purpose of this app, no persistent volume: the SQLite database is rebuilt on every new fetch or container restart.
+
+## EC2 User Data
+
+In case you would like to test this app on your EC2 instance, please configure a Security Group allowing inbound trafic on the port 8000 and use the following User Data before launch:
+```
+#!/bin/bash
+dnf update -y
+dnf install -y docker git
+systemctl enable --now docker
+
+git clone https://github.com/WerNad99/cool-dogs-fetcher.git /opt/app
+cd /opt/app
+curl -L https://github.com/docker/compose/releases/download/v2.27.0/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
+chmod +x /usr/local/bin/docker-compose
+docker compose up -d
+
+```
