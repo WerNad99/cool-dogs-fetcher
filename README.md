@@ -46,7 +46,7 @@ For the purpose of this app, no persistent volume: the SQLite database is rebuil
 
 ## EC2 User Data
 
-In case you would like to test this app on your EC2 instance, please configure a Security Group allowing inbound trafic on the port 8000 and use the following User Data before launch:
+In case you would like to test this app on your EC2 instance, please configure a Security Group allowing inbound trafic on the port 80 (HTTP) and use the following User Data before launch:
 ```
 #!/bin/bash
 dnf update -y
