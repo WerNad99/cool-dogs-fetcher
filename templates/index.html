@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cool Dogs Fetcher</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 2rem; background: #f8f9fb; color: #111; }
+    .card { max-width: 800px; margin: 0 auto; background: #fff; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,.08); }
+    h1 { font-size: 1.25rem; margin: 0 0 1rem; }
+    form { display: flex; gap: .75rem; align-items: center; }
+    input[type=number] { width: 140px; padding: .6rem .7rem; border: 1px solid #cfd4dc; border-radius: 8px; font-size: 1rem; }
+    button { padding: .65rem 1rem; border: 0; border-radius: 8px; background: #4c6ef5; color: #fff; font-weight: 600; cursor: pointer; }
+    button:disabled { opacity: .6; cursor: not-allowed; }
+    .hint { color: #555; font-size: .95rem; margin-top: .5rem; }
+    .status { margin-top: 1rem; font-size: .95rem; }
+    .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: .75rem; margin-top: 1rem; }
+    .thumb { background: #f1f3f5; border: 1px solid #e9ecef; border-radius: 8px; overflow: hidden; }
+    .thumb img { display: block; width: 100%; height: auto; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>How many cool dogs you would like to fetch?</h1>
+    <form id="fetch-form">
+      <input id="count" type="number" min="1" max="50" value="5" required aria-label="Number of dogs" />
+      <button id="go" type="submit">Let's go!</button>
+    </form>
+    <div class="hint">We will call <code>/image/fetch?x=&lt;n&gt;</code> and then display images from <code>/image/1..n</code>.</div>
+    <div class="status" id="status"></div>
+    <div class="gallery" id="gallery"></div>
+    <div class="last">  <a id="last-link" href="/image/last" target="_blank">Open the last stored image →</a></div>
+    <div class="warning" id="warning"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById('fetch-form');
+    const input = document.getElementById('count');
+    const statusEl = document.getElementById('status');
+    const warning = document.getElementById('warning');
+    const gallery = document.getElementById('gallery');
+    const goBtn = document.getElementById('go');
+
+    function setBusy(busy) {
+      goBtn.disabled = busy;
+      input.disabled = busy;
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const n = parseInt(input.value, 10);
+      if (!Number.isInteger(n) || n < 1 || n > 50) {
+        statusEl.textContent = 'Please enter a number between 1 and 50.';
+        return;
+      }
+
+      setBusy(true);
+      statusEl.textContent = 'Fetching dogs…';
+      gallery.innerHTML = '';
+
+      try {
+        const resp = await fetch(`/image/fetch?x=${n}`);
+        if (!resp.ok) {
+          const txt = await resp.text();
+          throw new Error(`Server error ${resp.status}: ${txt}`);
+        }
+        const data = await resp.json();
+        statusEl.textContent = `Stored ${data.fetched} image(s). Click on the thumbnail to get the original picture.`;
+        warning.textContent = 'Please, reload the page should you want to re-fetch the pups - thumbnails are cached by your browser 👿 '
+        
+        // Render thumbnails from 1..n using existing endpoint + add a link
+        for (let i = 1; i <= n; i++) {
+          const wrap = document.createElement('div');
+          wrap.className = 'thumb';
+
+          const link = document.createElement('a');
+          link.href = `/image/${i}`;
+          link.target = '_blank'; // open image in new tab
+
+          const img = document.createElement('img');
+          img.loading = 'lazy';
+          img.alt = `Dog ${i}`;
+          img.src = `/image/${i}`;
+
+          link.appendChild(img);
+          wrap.appendChild(link);
+          gallery.appendChild(wrap);
+        }
+      } catch (err) {
+        console.error(err);
+        statusEl.textContent = err.message || 'Something went wrong.';
+      } finally {
+        setBusy(false);
+      }
+    });
+  </script>
+</body>
+</html>
